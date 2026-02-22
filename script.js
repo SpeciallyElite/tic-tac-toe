@@ -150,3 +150,5 @@ function gameStoragation() {
         gameOver = false;
     }
 }
+
+gameStoragation();
