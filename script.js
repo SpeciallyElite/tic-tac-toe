@@ -36,6 +36,40 @@ function gameStoragation() {
     function WinnerDisplay(winner){
         const winnerOutput = document.getElementById("winner");
         winnerOutput.textContent = "Winner is "+ winner;
+        
+        const winVideo = document.getElementById("resultVideo");
+        if(winner === human){
+            winVideo.textContent = "YOU D-D-D-D-D-D-DESTROYED THE MACHINES!";
+        } else {
+            winVideo.textContent = "YOU GOT D-D-D-D-D-D-D-D-D-D-D-D-D-D-DESTROYEEEEEED!";
+        }
+        winVideo.style.display = "block";
+        winVideo.style.animation = "explodeText 1s forwards";
+
+        const winVid2 = document.getElementById("winVideo2");
+        const winSound2 = document.getElementById("winSound");
+
+        winVid2.src = "result.mp4";
+        winVid2.load();
+        winVid2.style.display = "block";
+        winVid2.currentTime = 0;
+        winVid2.play();
+
+        winSound2.currentTime = 0;
+        winSound2.play();
+
+        winVid2.addEventListener("ended", () => {
+            winVid2.style.display = "none";
+        });
+
+        // setTimeout(() => {
+        //     video.style.display = "none";
+        //     }, 4000);
+
+        // setTimeout(() => {
+        //     winVideo.style.display = "none";
+        //     winVideo.style.animation = "";
+        // }, 3000);
     }
 
     function drawDisplay(){
@@ -146,6 +180,21 @@ function gameStoragation() {
 
         document.getElementById("winner").textContent = "";
         document.getElementById("draw").textContent = "";
+
+        const winVid2 = document.getElementById("winVideo2");
+        const winVideo = document.getElementById("resultVideo");
+
+        winVid2.style.display = "none";
+        winVid2.pause();
+        winVid2.currentTime = 0;
+
+        winVideo.style.animation = "";
+        winVideo.style.display = "none";
+
+        const winSound2 = document.getElementById("winSound");
+
+        winSound2.pause();
+        winSound2.currentTime = 0;
 
         gameOver = false;
     }
