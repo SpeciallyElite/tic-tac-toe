@@ -1,44 +1,50 @@
-const positions = Array(9).fill[null];
+function gameStoragation() {
 
-const human = "X";
-const machine = "O";
-let currentPlayer = human;
+    const positions = Array(9).fill(null);
+    const human = "X";
+    const machine = "O";
+    let currentPlayer = human;
+    let gameOver = false;
 
-function gameBoard() {
-    if (positions[input] === null) {
-        positions[input] = currentPlayer;
-    }
-    else {
-        return console.log("Wrong Move cuz");
-    }
-
-    // newInput = input
-    // if (positions.includes(newInput)){
-    //     return console.log("Wrong Move");
-    // }
-    // else{
-    //     positions.push(newInput);
-    // }
-    // return logic(newInput);
-}
-
-function UI(){
-    console.log(Winner);
-}
-
-function logic() {
-    gameBoard(input);
-    winningConditions =
+    const winningConditions =
         [[0, 1, 2], [3, 4, 5], [6, 7, 8],     // Rows
         [0, 3, 6], [1, 4, 7], [2, 5, 8],     // Columns
-        [0, 4, 8], [2, 4, 6]]               //Dia-ag-nolassssss mf [my friend :) ]
+        [0, 4, 8], [2, 4, 6]];               //Dia-ag-nolassssss mf [my friend :) ]
+
+    const cells = document.getElementsByClassName("cell");
+    for (let i = 0; i < cells.length; i++) {
+
+        cells[i].addEventListener("click", () => {
+            const input = cells[i].dataset.index;
+            logic(Number(input));
+        });
+    }
+
+    function gameBoard(input) {
+        if (positions[input] === null) {
+            positions[input] = currentPlayer;
+            cells[input].textContent = currentPlayer
+            return true;
+        }
+        else {
+            console.log("Wrong Move cuz");
+            return false;
+        }
+    }
+
+    
+    function WinnerDisplay(winner){
+        const winnerOutput = document.getElementById("winner");
+        winnerOutput.textContent = "Winner is "+ winner;
+    }
+
+    function drawDisplay(){
+        const drawOutput = document.getElementById("draw")
+        drawOutput.textContent = "Draw"
+    }
 
     function Winner() {
-        for (i = 0; i < winningConditions.length; i++) {
-            // const combination = winningConditions[i];
-            // const a = combination[0];
-            // const b = combination[1];
-            // const c = combination[2]; Basically tha'ts what's below in one line
+        for (let i = 0; i < winningConditions.length; i++) {
 
             const [a, b, c] = winningConditions[i];
 
@@ -50,31 +56,97 @@ function logic() {
                 return pA;
             }
         }
-    }
-    function Switch() {
-        if (currentPlayer === human){
-            currentPlayer = machine;
-            machineAcrobats();
-        }
-        else{
-            currentPlayer = human;
-        }
-    }
-}
-
-function machineAcrobats(){
-    const emptyCan = [];
-    const randomizer = Math.floor(Math.random()*emptyCan.length)
-    
-    if (emptyCan.length === 0){
         return null;
     }
 
-    for(i=0, i<positions.length; i++){
-       if (positions[i] === null){
-        emptyCan.push(i);
-       } 
+    function DrawCuz() {
+        let boardFull = true;
+        for (let i = 0; i < positions.length; i++) {
+            if (positions[i] === null) {
+            boardFull = false;
+            break;
+            }
+        }
+
+        let winner = Winner();
+
+        if (boardFull && !winner) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
-    return emptyCan[randomizer];
+    function Switch() {
+        if (currentPlayer === human) {
+            currentPlayer = machine;
+        }
+        else {
+            currentPlayer = human;
+        }
+        
+        if (currentPlayer === machine) {
+            const machineIndex = machineAcrobats();
+            if (machineIndex !== null) {
+                logic(machineIndex);
+            }
+        }
+    }
+
+    function logic(input) {
+        if (gameOver) return;
+
+        const validMove = gameBoard(input);
+        if (!validMove) return;
+
+        const winner = Winner();
+        if (winner !== null) {
+            gameOver = true;
+            WinnerDisplay(winner);
+            return;
+        }
+
+        const draw = DrawCuz();
+        if (draw) {
+            gameOver = true;
+            drawDisplay();
+            return;
+        }
+        Switch();
+    }
+
+    function machineAcrobats() {
+        const emptyCan = [];
+
+        for (let i = 0; i < positions.length; i++) {
+            if (positions[i] === null) {
+                emptyCan.push(i);
+            }
+        }
+
+        if (emptyCan.length === 0) {
+            return null;
+        }
+
+        const randomizer = Math.floor(Math.random() * emptyCan.length)
+        return emptyCan[randomizer];
+    }
+
+    const resetBTN = document.getElementById("resetButton");
+    resetBTN.addEventListener("click", resetGame);
+
+    function resetGame(){
+        positions.fill(null);
+        currentPlayer = human;
+
+        for (let i = 0; i < cells.length; i++) {
+            cells[i].textContent = "";
+        }
+
+        document.getElementById("winner").textContent = "";
+        document.getElementById("draw").textContent = "";
+
+        gameOver = false;
+    }
 }
